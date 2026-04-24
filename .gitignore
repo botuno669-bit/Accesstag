@@ -1,0 +1,8 @@
+node_modules/
+vendor/
+.env
+storage/
+.vscode/
+read_pdf.js
+read_pdf.py
+docs/requerimientos.txt
