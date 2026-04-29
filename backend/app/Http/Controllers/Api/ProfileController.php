@@ -4,46 +4,45 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Profile;
 
 class ProfileController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Traer datos de perfil del usuario
      */
-    public function index()
+    public function show($supabase_user_id)
     {
-        //
+        $profile = Profile::where('supabase_user_id', $supabase_user_id)->first();
+        if(!$profile) return response()->json(['error' => 'Perfil no encontrado'], 404);
+        
+        return response()->json($profile, 200);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guardar el perfil después de que se registran en Supabase
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'supabase_user_id' => 'required|string|unique:profiles,supabase_user_id',
+            'nombre_completo' => 'required|string',
+            'tipo_documento' => 'required|string',
+            'numero_documento' => 'required|string|unique:profiles,numero_documento',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        // Por defecto, nacen como Aprendiz No Validado
+        $profile = Profile::create([
+            'supabase_user_id' => $request->supabase_user_id,
+            'nombre_completo' => $request->nombre_completo,
+            'tipo_documento' => $request->tipo_documento,
+            'numero_documento' => $request->numero_documento,
+            'rol' => 'Aprendiz (No Validado)'
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            'mensaje' => 'Perfil creado. Acércate a portería para verificación.',
+            'perfil' => $profile
+        ], 201);
     }
 }
