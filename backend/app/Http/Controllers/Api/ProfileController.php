@@ -45,4 +45,28 @@ class ProfileController extends Controller
             'perfil' => $profile
         ], 201);
     }
+
+    /**
+     * Traer TODOS los perfiles (Para el Panel de Administración)
+     */
+    public function index()
+    {
+        $profiles = Profile::all();
+        return response()->json($profiles, 200);
+    }
+
+    /**
+     * Actualizar Rol del Usuario (Ascender a Guarda o Validar Aprendiz)
+     */
+    public function updateRole(Request $request, $id)
+    {
+        $request->validate([
+            'rol' => 'required|string|in:Administrador,Guarda,Aprendiz,Aprendiz (No Validado),Bloqueado'
+        ]);
+
+        $profile = Profile::findOrFail($id);
+        $profile->update(['rol' => $request->rol]);
+
+        return response()->json(['mensaje' => 'Rol actualizado exitosamente', 'perfil' => $profile], 200);
+    }
 }

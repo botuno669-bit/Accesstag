@@ -15,6 +15,8 @@ Route::get('/user', function (Request $request) {
 Route::prefix('profiles')->group(function () {
     Route::post('/', [ProfileController::class, 'store']); // Registro inicial de datos complementarios
     Route::get('/{supabase_user_id}', [ProfileController::class, 'show']); // Obtener Mi Perfil
+    Route::get('/', [ProfileController::class, 'index']); // Obtener todos los perfiles (Admin)
+    Route::put('/{id}/role', [ProfileController::class, 'updateRole']); // Cambiar Rol (Admin)
 });
 
 // Dispositivos
@@ -22,6 +24,8 @@ Route::prefix('devices')->group(function () {
     Route::post('/', [DeviceController::class, 'store']); // Regitra Nuevo
     Route::get('/', [DeviceController::class, 'index']); // Lista Todos
     Route::get('/nfc/{nfc_uid}', [DeviceController::class, 'showByNfc']); // Buscar para validar en frontend
+    Route::put('/{id}/status', [DeviceController::class, 'updateStatus']); // Actualizar estado (Admin)
+    Route::put('/{id}/link-nfc', [DeviceController::class, 'linkNfc']); // Vincular NFC físico (Admin)
 });
 
 // Entradas y Salidas

@@ -65,6 +65,16 @@ body {
   font-size: 0.95rem;
 }
 
+/* Fix para el autocompletado (Autofill) molesto del navegador */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.5) inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .app-container {
   display: flex;
   min-height: 100vh;
@@ -418,4 +428,157 @@ body {
 
 .text-btn:hover {
   text-decoration: underline;
+}
+
+/* --- RESPONSIVE MOBILE LAYOUT --- */
+.auth-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.auth-image-col {
+  flex: 1.2;
+  position: relative;
+  display: block;
+}
+
+.auth-form-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+  background: var(--bg);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-y: auto;
+}
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  flex-direction: row;
+}
+
+.main-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 0;
+}
+
+.sidebar-container {
+  width: 280px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  padding: 2rem 1.5rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.nav-text {
+  display: inline;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+  color: var(--text);
+}
+
+.sidebar-logout {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  
+  .main-scroll {
+    padding-bottom: 70px; /* Espacio para el navbar inferior */
+  }
+
+  /* El sidebar se convierte en Bottom Navigation Bar en celular */
+  .sidebar-container {
+    width: 100%;
+    height: 70px;
+    padding: 0 1rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    background: rgba(9, 9, 11, 0.95);
+  }
+
+  .sidebar-logo {
+    display: none; /* Ocultar el logo en el bottom nav */
+  }
+
+  .sidebar-container nav {
+    flex-direction: row !important;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    padding: 0.5rem;
+    gap: 0.2rem;
+    justify-content: center;
+    border-radius: 0.5rem;
+    text-align: center;
+  }
+
+  .nav-text {
+    display: none; /* Ocultar el texto en móviles para que solo queden los íconos */
+  }
+
+  .sidebar-logout {
+    display: none; /* Ocultamos el botón de salir del navbar (lo podemos mover a perfil) */
+  }
+
+  /* Ajustes a tablas y modales para móviles */
+  .card {
+    padding: 1rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .auth-image-col {
+    display: none; /* En móviles ocultamos la foto gigante para dar prioridad al login */
+  }
+
+  .auth-form-col {
+    padding: 1.5rem;
+    border-left: none;
+    width: 100%;
+  }
 }

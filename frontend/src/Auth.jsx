@@ -88,14 +88,10 @@ export default function Auth({ onAuthenticated }) {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw', background: 'var(--bg)', overflow: 'hidden' }}>
+    <div className="auth-container">
       
       {/* Columna Izquierda - Imagen Corporativa */}
-      <div style={{ 
-        flex: 1.2, 
-        position: 'relative', 
-        display: 'block' 
-      }}>
+      <div className="auth-image-col">
         {/* Usamos un div como imagen de fondo por si queremos ajustar el cover fácilmente */}
         <div style={{
           position: 'absolute',
@@ -125,7 +121,8 @@ export default function Auth({ onAuthenticated }) {
         {/* Contenedor de Texto Adaptable */}
         <div style={{ 
           position: 'absolute', 
-          bottom: '10%', 
+          top: '50%',
+          transform: 'translateY(-50%)',
           left: '12%', 
           right: '5%',
           maxWidth: '650px',
@@ -171,17 +168,7 @@ export default function Auth({ onAuthenticated }) {
       </div>
 
       {/* Columna Derecha - Formulario */}
-      <div style={{ 
-        flex: 1, 
-        display: 'flex', 
-        flexDirection: 'column',
-        justifyContent: 'center', 
-        alignItems: 'center',
-        padding: '2rem',
-        position: 'relative',
-        background: 'var(--bg)',
-        borderLeft: '1px solid rgba(255,255,255,0.05)'
-      }}>
+      <div className="auth-form-col">
         
         {/* Luces sutiles de fondo (Glows) */}
         <div style={{ position: 'absolute', top: '10%', right: '10%', width: '300px', height: '300px', background: 'var(--primary)', borderRadius: '50%', filter: 'blur(150px)', opacity: '0.15', zIndex: 0 }}></div>

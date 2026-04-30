@@ -51,50 +51,76 @@ export default function Dashboard({ session, profile }) {
 
   return (
     <div style={{ padding: '2rem', flex: 1, overflowY: 'auto' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', padding: '10px 16px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', width: '350px' }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div className="input-group" style={{ width: '350px' }}>
           <Search size={18} color="var(--text-muted)" />
-          <input type="text" placeholder="Buscar..." style={{ background: 'transparent', border: 'none', color: 'white', width: '100%', outline: 'none' }} />
+          <input type="text" placeholder="Buscar movimientos rápidos..." />
         </div>
-        <div style={{ background: 'var(--primary)', padding: '8px 16px', borderRadius: '20px', fontWeight: 'bold' }}>
-          {profile?.rol || 'Cargando...'}
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: 'rgba(57, 169, 0, 0.1)', border: '1px solid rgba(57, 169, 0, 0.3)', padding: '8px 16px', borderRadius: '2rem', fontWeight: 'bold', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ width: '8px', height: '8px', background: 'var(--primary)', borderRadius: '50%', boxShadow: '0 0 10px var(--primary)' }}></div>
+            {profile?.rol || 'Cargando...'}
+          </div>
+          
+          <div style={{ width: '40px', height: '40px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'var(--transition)' }} className="card-hover">
+            <span style={{ fontWeight: 'bold', color: 'var(--text)' }}>{profile?.nombre_completo?.charAt(0) || 'U'}</span>
+          </div>
         </div>
       </header>
 
-      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Hola, {profile?.nombre_completo || 'Usuario'}</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
-        {isAdmin ? 'Resumen general del sistema de accesos del SENA.' : 'Bienvenido a tu portal personal de equipos.'}
-      </p>
+      <div style={{ marginBottom: '3rem' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.5rem', letterSpacing: '-0.5px' }}>
+          Hola, <span style={{ color: 'var(--primary)' }}>{profile?.nombre_completo?.split(' ')[0] || 'Usuario'}</span>
+        </h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>
+          {isAdmin ? 'Resumen general del sistema de seguridad del campus.' : 'Bienvenido a tu portal personal de equipos.'}
+        </p>
+      </div>
       
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
         {isAdmin ? (
           <>
-            <div style={{ background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--border)' }}>
-              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}><Users size={16} /> Usuarios Activos</h3>
-              <p style={{ fontSize: '2.5rem', color: 'var(--text)', fontWeight: 'bold' }}>{loading ? '...' : stats.users}</p>
+            <div className="card">
+              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' }}>
+                <Users size={18} color="var(--text)" /> Usuarios Activos
+              </h3>
+              <p style={{ fontSize: '3rem', color: 'var(--text)', fontWeight: '800', lineHeight: '1' }}>{loading ? '...' : stats.users}</p>
             </div>
-            <div style={{ background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--border)' }}>
-              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}><Lock size={16} /> Dispositivos Globales</h3>
-              <p style={{ fontSize: '2.5rem', color: 'var(--primary)', fontWeight: 'bold' }}>{loading ? '...' : stats.devices}</p>
+            <div className="card" style={{ position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '100px', height: '100px', background: 'var(--primary)', filter: 'blur(50px)', opacity: '0.2' }}></div>
+              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' }}>
+                <Lock size={18} color="var(--primary)" /> Dispositivos Globales
+              </h3>
+              <p style={{ fontSize: '3rem', color: 'var(--primary)', fontWeight: '800', lineHeight: '1' }}>{loading ? '...' : stats.devices}</p>
             </div>
-            <div style={{ background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--border)' }}>
-              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}><Activity size={16} /> Movimientos Hoy</h3>
-              <p style={{ fontSize: '2.5rem', color: 'var(--accent)', fontWeight: 'bold' }}>{loading ? '...' : stats.entries}</p>
+            <div className="card">
+              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' }}>
+                <Activity size={18} color="var(--accent)" /> Movimientos Hoy
+              </h3>
+              <p style={{ fontSize: '3rem', color: 'var(--accent)', fontWeight: '800', lineHeight: '1' }}>{loading ? '...' : stats.entries}</p>
             </div>
           </>
         ) : (
           <>
-            <div style={{ background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--border)' }}>
-              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}><Lock size={16} /> Mis Equipos Registrados</h3>
-              <p style={{ fontSize: '2.5rem', color: 'var(--text)', fontWeight: 'bold' }}>{loading ? '...' : stats.users}</p>
+            <div className="card">
+              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' }}>
+                <Lock size={18} color="var(--text)" /> Mis Equipos Registrados
+              </h3>
+              <p style={{ fontSize: '3rem', color: 'var(--text)', fontWeight: '800', lineHeight: '1' }}>{loading ? '...' : stats.users}</p>
             </div>
-            <div style={{ background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--border)' }}>
-              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}><ShieldCheck size={16} /> Equipos Activos (Validados)</h3>
-              <p style={{ fontSize: '2.5rem', color: 'var(--primary)', fontWeight: 'bold' }}>{loading ? '...' : stats.devices}</p>
+            <div className="card" style={{ position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '100px', height: '100px', background: 'var(--primary)', filter: 'blur(50px)', opacity: '0.2' }}></div>
+              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' }}>
+                <ShieldCheck size={18} color="var(--primary)" /> Equipos Activos (Validados)
+              </h3>
+              <p style={{ fontSize: '3rem', color: 'var(--primary)', fontWeight: '800', lineHeight: '1' }}>{loading ? '...' : stats.devices}</p>
             </div>
-            <div style={{ background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--border)' }}>
-              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}><Activity size={16} /> Mis Entradas/Salidas</h3>
-              <p style={{ fontSize: '2.5rem', color: 'var(--accent)', fontWeight: 'bold' }}>{loading ? '...' : stats.entries}</p>
+            <div className="card">
+              <h3 style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' }}>
+                <Activity size={18} color="var(--accent)" /> Mis Entradas/Salidas
+              </h3>
+              <p style={{ fontSize: '3rem', color: 'var(--accent)', fontWeight: '800', lineHeight: '1' }}>{loading ? '...' : stats.entries}</p>
             </div>
           </>
         )}

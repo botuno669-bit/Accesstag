@@ -8,6 +8,7 @@ import Bitacora from './Bitacora';
 import Profile from './Profile';
 import Sidebar from './Sidebar';
 import Dashboard from './Dashboard';
+import AdminPanel from './AdminPanel';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -101,14 +102,17 @@ function App() {
 
   return (
     <Router>
-      <div style={{ display: 'flex', height: '100vh', width: '100vw', background: 'var(--bg)', color: 'var(--text)' }}>
+      <div className="app-layout">
         <Sidebar onLogout={handleLogout} profile={profile} />
-        <Routes>
-          <Route path="/" element={<Dashboard session={session} profile={profile} />} />
-          <Route path="/usuarios" element={<Profile session={session} profile={profile} />} />
-          <Route path="/dispositivos" element={<Devices session={session} profile={profile} />} />
-          <Route path="/bitacora" element={<Bitacora session={session} profile={profile} />} />
-        </Routes>
+        <div className="main-scroll">
+          <Routes>
+            <Route path="/" element={<Dashboard session={session} profile={profile} />} />
+            <Route path="/usuarios" element={<Profile session={session} profile={profile} />} />
+            <Route path="/dispositivos" element={<Devices session={session} profile={profile} />} />
+            <Route path="/bitacora" element={<Bitacora session={session} profile={profile} />} />
+            <Route path="/admin" element={<AdminPanel profile={profile} />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

@@ -69,4 +69,49 @@ class DeviceController extends Controller
             'device' => $device
         ], 200);
     }
+
+    /**
+     * Actualizar estado del dispositivo (Activo, Bloqueado, Extraviado)
+     */
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'estado' => 'required|string|in:Activo,Bloqueado,Extraviado,Retenido en CIC'
+        ]);
+
+        $device = Device::findOrFail($id);
+        $device->update(['estado' => $request->estado]);
+
+        return response()->json([
+            'message' => 'Estado actualizado exitosamente.',
+            'device' => $device
+        ], 200);
+    }
+
+    /**
+     * Vincular nuevo NFC físico al dispositivo (El administrador pega el sticker y lo registra)
+     */
+    public function linkNfc(Request $request, $id)
+    {
+        $request->validate([
+            'nfc_uid' => 'required|string|unique:devices,nfc_uid'
+        ]);
+
+        $device = Device::findOrFail($id);
+        
+        // Verificamos que sea un dispositivo pendiente de vinculación
+        if (!str_starts_with($device->nfc_uid, 'TEMP-')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Este dispositivo ya tiene un chip NFC físico vinculado.'
+            ], 400);
+        }
+
+        $device->update(['nfc_uid' => $request->nfc_uid]);
+
+        return response()->json([
+            'message' => 'Etiqueta NFC vinculada correctamente. Dispositivo listo para usar.',
+            'device' => $device
+        ], 200);
+    }
 }
