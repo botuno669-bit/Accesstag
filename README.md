@@ -1,6 +1,9 @@
 # AccessTag 🛡️
 
-**AccessTag** es una plataforma institucional premium diseñada para el registro, validación y control de seguridad de dispositivos electrónicos (computadores, tablets, etc.) mediante tecnología NFC. Fue diseñada específicamente para optimizar la seguridad y los tiempos de acceso en las porterías institucionales (Ej. SENA).
+**AccessTag** es una plataforma institucional premium diseñada para el registro, validación y control de seguridad de dispositivos electrónicos (computadores, tablets, etc.) mediante tecnología NFC. Fue diseñada específicamente para solucionar los cuellos de botella y la falta de trazabilidad en las porterías institucionales (como las del SENA).
+
+### 🎯 El Problema que Resuelve
+En instituciones grandes, los estudiantes deben registrar sus computadores al ingresar para evitar robos. Hacer esto a mano o con planillas de Excel genera enormes filas en horas pico y es vulnerable a fraudes. AccessTag digitaliza este proceso: el estudiante inscribe su equipo en línea, la institución le pega un pequeño sticker NFC (indestructible) al computador, y a partir de ese momento, **el guarda de seguridad solo debe acercar una tablet o celular al sticker para autorizar el paso en menos de 1 segundo**.
 
 ---
 
@@ -90,3 +93,25 @@ La interfaz estará disponible en `http://localhost:5173`.
 ---
 
 > **Nota para IAs futuras:** Este sistema ya tiene implementada la lógica de diseño responsivo (mobile-first) en el archivo `index.css` de React, utilizando el contenedor `.app-layout`. Cualquier nueva interfaz (modales, tablas) debe respetar los parámetros visuales oscuros y de "Glassmorphism" (`var(--bg)`, `var(--card-bg)`, etc.).
+
+---
+
+## 🔮 Roadmap y Aspectos a Mejorar (Futuro)
+
+Este proyecto tiene una base sólida, pero las siguientes áreas están listas para ser escaladas:
+
+1. **Integración Física real con NFC:**
+   - Actualmente, la vinculación manual en el backend permite simular la validación NFC ingresando un UID. Se debe integrar la WebNFC API en el frontend (`navigator.nfc.NDEFReader()`) para que el celular del guarda y del administrador pueda leer y escribir físicamente sobre los chips usando el navegador Android.
+   
+2. **Sistema de Reportes y Gráficas:**
+   - Construir un "Dashboard" con gráficos (usando Chart.js o Recharts) en el Panel de Administración que muestre: "Horas pico de entrada", "Total de equipos robados/extraviados", etc.
+   
+3. **Escalabilidad y Permisos Avanzados (Gates/Policies):**
+   - En el backend (Laravel), implementar *Policies* y *Gates* estrictos para que un Aprendiz jamás pueda llamar a las APIs de administración (Actualmente la seguridad recae mucho en que el Frontend bloquea la vista).
+   - Implementar "Soft Deletes" en Laravel para no perder el historial de un equipo si un usuario decide borrarlo de su cuenta.
+
+4. **Validación con API de la Registraduría / SENA:**
+   - Conectar el registro con una base de datos externa para comprobar que la persona que se registra sí está matriculada activamente, y no permitir correos personales (solo `@soy.sena.edu.co`).
+
+5. **Notificaciones en Tiempo Real y Correos:**
+   - Enviar un correo o notificación PUSH (WebSockets/Pusher) al aprendiz si su equipo ha sido marcado como "Retenido en CIC" o si su acceso fue bloqueado en portería.
