@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './supabase';
-import { Laptop, Plus, Trash2, Shield, Info } from 'lucide-react';
+import { Laptop, Plus, Trash2, Shield, Info, Camera } from 'lucide-react';
 import { API_URL } from './config';
+
+const SERVER_URL = API_URL.replace('/api', '');
 
 export default function Devices({ session, profile }) {
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [uploadingDevice, setUploadingDevice] = useState(null);
 
   // Formulario de nuevo dispositivo
   const [formData, setFormData] = useState({
@@ -67,6 +70,40 @@ export default function Devices({ session, profile }) {
     }
   };
 
+  const handlePhotoUpload = async (e, deviceId) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("La imagen es muy grande. Máximo 2MB.");
+      return;
+    }
+
+    setUploadingDevice(deviceId);
+    const formData = new FormData();
+    formData.append('foto', file);
+
+    try {
+      const res = await fetch(`${API_URL}/devices/${deviceId}/photo`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setDevices(devices.map(d => d.id === deviceId ? { ...d, foto_url: data.foto_url } : d));
+        alert("Foto del dispositivo actualizada.");
+      } else {
+        alert("Error subiendo la foto.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error de conexión al subir la foto.");
+    } finally {
+      setUploadingDevice(null);
+    }
+  };
+
   return (
     <div style={{ padding: '2rem', flex: 1, color: 'var(--text)' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
@@ -87,10 +124,23 @@ export default function Devices({ session, profile }) {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
           {devices.map(device => (
-            <div key={device.id} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', padding: '1.5rem', borderRadius: '1rem', backdropFilter: 'blur(10px)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <div style={{ background: 'rgba(57, 169, 0, 0.1)', padding: '10px', borderRadius: '0.8rem' }}>
-                  <Laptop size={24} color="var(--primary)" />
+            <div key={device.id} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', padding: '1.5rem', borderRadius: '1rem', backdropFilter: 'blur(10px)', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', alignItems: 'flex-start' }}>
+                <div style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '0.8rem', background: 'rgba(57, 169, 0, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {device.foto_url ? (
+                    <img src={`${SERVER_URL}${device.foto_url}`} alt="Device" style={{ width: '100%', height: '100%', borderRadius: '0.8rem', objectFit: 'cover' }} />
+                  ) : (
+                    <Laptop size={32} color="var(--primary)" />
+                  )}
+                  
+                  <label style={{
+                    position: 'absolute', bottom: '-10px', right: '-10px', background: 'var(--primary)', color: 'white',
+                    width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: uploadingDevice === device.id ? 'not-allowed' : 'pointer', border: '2px solid var(--card-bg)', boxShadow: '0 2px 5px rgba(0,0,0,0.5)'
+                  }} title="Subir Foto">
+                    <input type="file" accept="image/png, image/jpeg" style={{ display: 'none' }} onChange={(e) => handlePhotoUpload(e, device.id)} disabled={uploadingDevice === device.id} />
+                    {uploadingDevice === device.id ? <div style={{ width: '12px', height: '12px', border: '2px solid white', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> : <Camera size={14} />}
+                  </label>
                 </div>
                 <span style={{ 
                   fontSize: '0.8rem', padding: '4px 12px', borderRadius: '1rem', 

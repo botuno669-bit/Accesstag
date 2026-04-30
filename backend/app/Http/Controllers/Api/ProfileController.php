@@ -69,4 +69,34 @@ class ProfileController extends Controller
 
         return response()->json(['mensaje' => 'Rol actualizado exitosamente', 'perfil' => $profile], 200);
     }
+
+    /**
+     * Subir y actualizar la foto de perfil del usuario
+     */
+    public function updatePhoto(Request $request, $id)
+    {
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
+        ]);
+
+        $profile = Profile::findOrFail($id);
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '_' . $profile->numero_documento . '.' . $file->getClientOriginalExtension();
+            
+            // Guardar en storage/app/public/avatars
+            $path = $file->storeAs('avatars', $filename, 'public');
+            
+            // Actualizar DB con la ruta
+            $profile->update(['foto_url' => '/storage/' . $path]);
+
+            return response()->json([
+                'mensaje' => 'Foto de perfil actualizada exitosamente.',
+                'foto_url' => '/storage/' . $path
+            ], 200);
+        }
+
+        return response()->json(['error' => 'No se recibió ninguna imagen.'], 400);
+    }
 }

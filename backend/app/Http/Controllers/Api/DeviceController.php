@@ -114,4 +114,34 @@ class DeviceController extends Controller
             'device' => $device
         ], 200);
     }
+
+    /**
+     * Subir y actualizar la foto del dispositivo
+     */
+    public function updatePhoto(Request $request, $id)
+    {
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
+        ]);
+
+        $device = Device::findOrFail($id);
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '_device_' . $device->id . '.' . $file->getClientOriginalExtension();
+            
+            // Guardar en storage/app/public/devices
+            $path = $file->storeAs('devices', $filename, 'public');
+            
+            // Actualizar DB con la ruta
+            $device->update(['foto_url' => '/storage/' . $path]);
+
+            return response()->json([
+                'message' => 'Foto del dispositivo actualizada exitosamente.',
+                'foto_url' => '/storage/' . $path
+            ], 200);
+        }
+
+        return response()->json(['error' => 'No se recibió ninguna imagen.'], 400);
+    }
 }
