@@ -1,13 +1,13 @@
-# AccessTag 🛡️
+# AccessTag
 
 **AccessTag** es una plataforma institucional premium diseñada para el registro, validación y control de seguridad de dispositivos electrónicos (computadores, tablets, etc.) mediante tecnología NFC. Fue diseñada específicamente para solucionar los cuellos de botella y la falta de trazabilidad en las porterías institucionales (como las del SENA).
 
-### 🎯 El Problema que Resuelve
+### El Problema que Resuelve
 En instituciones grandes, los estudiantes deben registrar sus computadores al ingresar para evitar robos. Hacer esto a mano o con planillas de Excel genera enormes filas en horas pico y es vulnerable a fraudes. AccessTag digitaliza este proceso: el estudiante inscribe su equipo en línea, la institución le pega un pequeño sticker NFC (indestructible) al computador, y a partir de ese momento, **el guarda de seguridad solo debe acercar una tablet o celular al sticker para autorizar el paso en menos de 1 segundo**.
 
 ---
 
-## 🛠️ Stack Tecnológico (Arquitectura)
+## Stack Tecnológico (Arquitectura)
 
 Este proyecto está dividido en un ecosistema robusto que separa el cliente, el servidor y la autenticación:
 
@@ -24,7 +24,7 @@ Este proyecto está dividido en un ecosistema robusto que separa el cliente, el 
 
 ---
 
-## 🏗️ Flujo Operativo y Roles
+## Flujo Operativo y Roles
 
 El sistema está estructurado jerárquicamente con distintos niveles de permisos:
 
@@ -44,7 +44,7 @@ El sistema está estructurado jerárquicamente con distintos niveles de permisos
 
 ---
 
-## 🗄️ Esquema de Base de Datos (Core)
+## Esquema de Base de Datos (Core)
 
 Si una Inteligencia Artificial va a modificar este proyecto en el futuro, debe conocer estas tablas principales:
 
@@ -72,7 +72,7 @@ Si una Inteligencia Artificial va a modificar este proyecto en el futuro, debe c
 
 ---
 
-## 🚀 Guía de Ejecución Rápida
+## Guía de Ejecución Rápida
 
 Para levantar el entorno de desarrollo local:
 
@@ -96,7 +96,7 @@ La interfaz estará disponible en `http://localhost:5173`.
 
 ---
 
-## 🔮 Roadmap y Aspectos a Mejorar (Futuro)
+## Roadmap y Aspectos a Mejorar (Futuro)
 
 Este proyecto tiene una base sólida, pero las siguientes áreas están listas para ser escaladas:
 
